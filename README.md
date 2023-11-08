@@ -21,19 +21,21 @@ Inroduce the main function, in the main method set up the device ,array size and
 Step 6 :
 Save and execute the program.
 ## PROGRAM:
-Developed By: MURALI S
-Register no.: 212222230088
+Developed By: MADHAN BABU P
+Register no.: 212222230075
+
+
 
 #include "common.h"
 #include <cuda_runtime.h>
 #include <stdio.h>
-
 /*
  * An example of using shared memory to transpose rectangular thread coordinates
  * of a CUDA grid into a global memory array. Different kernels below
  * demonstrate performing reads and writes with different ordering, as well as
  * optimizing using memory padding.
  */
+
 
 #define BDIMX 16
 #define BDIMY 16
@@ -54,46 +56,34 @@ void printData(char *msg, int *in,  const int size)
 
 __global__ void setRowReadRow(int *out)
 {
-    // static shared memory
     __shared__ int tile[BDIMY][BDIMX];
 
-    // mapping from thread index to global memory index
     unsigned int idx = threadIdx.y * blockDim.x + threadIdx.x;
 
-    // shared memory store operation
     tile[threadIdx.y][threadIdx.x] = idx;
 
-    // wait for all threads to complete
     __syncthreads();
 
-    // shared memory load operation
     out[idx] = tile[threadIdx.y][threadIdx.x] ;
 }
 
 __global__ void setColReadCol(int *out)
 {
-    // static shared memory
     __shared__ int tile[BDIMX][BDIMY];
 
-    // mapping from thread index to global memory index
     unsigned int idx = threadIdx.y * blockDim.x + threadIdx.x;
 
-    // shared memory store operation
     tile[threadIdx.x][threadIdx.y] = idx;
 
-    // wait for all threads to complete
     __syncthreads();
 
-    // shared memory load operation
     out[idx] = tile[threadIdx.x][threadIdx.y];
 }
 
 __global__ void setColReadCol2(int *out)
 {
-    // static shared memory
     __shared__ int tile[BDIMY][BDIMX];
 
-    // mapping from 2D thread index to linear memory
     unsigned int idx = threadIdx.y * blockDim.x + threadIdx.x;
 
     // convert idx to transposed coordinate (row, col)
@@ -327,7 +317,8 @@ root@MidPC:/home/student/Desktop# nvprof ./a.out
                     0.00%     750ns         2     375ns     170ns     580ns  cuDeviceGet
                     0.00%     240ns         1     240ns     240ns     240ns  cuDeviceGetUuid
                     
-![Uploading PCA 22.jpeg…]()
+![output](./a.png)
+
 
 ## Result:
 The Matrix transposition on shared memory with grid (1,1) block (16,16) is demonstrated successfully
