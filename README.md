@@ -319,7 +319,7 @@ root@MidPC:/home/student/Desktop# nvprof ./a.out
 
 ![output](./ad.png)
 
-![output](./av.png)
+![output](./av.jpeg)
 
 
 ## Result:
